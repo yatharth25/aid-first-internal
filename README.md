@@ -1,6 +1,6 @@
-# aidfirst
+# Aid First
 
-Aid First.
+Health Domain Application.
 
 ## Getting Started
 
