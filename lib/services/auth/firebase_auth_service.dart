@@ -39,13 +39,16 @@ class FirebaseAuthService implements AuthServiceBase {
     Function setData,
   ) async {
     final Completer completer = Completer();
+    final String phone =
+        phoneNumber.contains('+91') ? phoneNumber : '+91$phoneNumber';
 
     _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+      phoneNumber: phone,
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
         completer.complete();
       },
       verificationFailed: (FirebaseAuthException exception) {
+        print(exception);
         completer.complete();
       },
       codeSent: (String verificationID, int? forceResendingtoken) {
