@@ -1,0 +1,46 @@
+name: aid_first
+description: An app for common people to help them know about different diseases/symptoms and there medications.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.13.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  simple_animations: 
+  shared_preferences: ^2.0.6
+  page_transition: 
+  cupertino_icons: 
+  google_fonts:
+  firebase_auth: ^2.0.0
+  url_launcher: any
+  intl_phone_field: ^2.1.0
+  pinput: ^1.2.2
+  http: ^0.13.4
+  shimmer: ^2.0.0
+  anim_search_bar: ^2.0.2
+  multi_select_flutter: ^4.0.0
+  gender_picker: ^1.1.0
+  firebase_core: ^1.13.1
+  firebase_database: ^9.0.8
+
+dependency_overrides:
+  # firebase_messaging_platform_interface: 3.1.6
+  # firebase_storage_platform_interface: 4.0.14
+  # cloud_functions_platform_interface: 5.0.21
+  # cloud_firestore_platform_interface: 5.4.13
+  firebase_auth_platform_interface: 6.1.11
+  firebase_database_platform_interface: 0.2.0+5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
+  assets:
+   - assets/
