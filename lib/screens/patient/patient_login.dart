@@ -196,6 +196,7 @@ class _PatientLoginState extends State<PatientLogin> {
                 ),
                 InkWell(
                     onTap: () async {
+                      _isoCode ??= '+91';
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         behavior: SnackBarBehavior.fixed,
                         shape: RoundedRectangleBorder(
@@ -228,7 +229,7 @@ class _PatientLoginState extends State<PatientLogin> {
                         ),
                       );
                       FirebaseAuthService.instance
-                          .verifyPhoneNumber(_phoneNumber.toString(), setData);
+                          .verifyPhoneNumber('$_isoCode$_phoneNumber', setData);
                     },
                     child: Container(
                       height: 50,
