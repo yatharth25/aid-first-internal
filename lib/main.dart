@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:aid_first/screens/patient/constants.dart';
 import 'package:aid_first/screens/patient/diagnose_yourself/diagnose_yourself.dart';
 import 'package:aid_first/screens/patient/diagnose_by_name/disease_by_name.dart';
 import 'package:aid_first/screens/patient/patient_dashboard.dart';
 import 'package:aid_first/screens/patient/patient_profile.dart';
 import 'package:aid_first/services/preferences/shared_preferences_service.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:aid_first/screens/otherWidgetsAndScreen/about_us.dart';
 import 'package:aid_first/screens/patient/patient_login.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:http/http.dart' as http;
 
 import 'animations/fade_animation.dart';
 
@@ -18,6 +23,7 @@ Future main() async {
   await Firebase.initializeApp().then((value) {
     runApp(const AidFirstApp());
   });
+
   // runApp(const AidFirstApp());
 }
 
@@ -30,8 +36,35 @@ class AidFirstApp extends StatefulWidget {
 
 class _AidFirstAppState extends State<AidFirstApp> {
   String? isSignedIn;
+
+  Future getDiagnoseToken(
+      String uri, String apiKey, String computedHashString) async {
+    try {
+      var res = await http.post(
+        Uri.parse(uri),
+        headers: {'Authorization': "Bearer $apiKey:$computedHashString"},
+      );
+      Map token = await json.decode(res.body);
+      return token['Token'];
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
   @override
   void initState() {
+    String uri = AuthConstants.uri;
+    String apiKey = AuthConstants.apiKey;
+    String secretKey = AuthConstants.secretKey;
+    List<int> secretBytes = utf8.encode(secretKey);
+    String computedHashString = '';
+    var hmac = Hmac(md5, secretBytes);
+    List<int> dataBytes = utf8.encode(uri);
+    Digest computedHash = hmac.convert(dataBytes);
+    computedHashString = base64.encode(computedHash.bytes);
+    getDiagnoseToken(uri, apiKey, computedHashString).then((value) =>
+        SharedPreferencesService.instance.setString('BEARER_TOKEN', value));
     SharedPreferencesService.instance.getString("AUTH_TOKEN").then((value) {
       setState(() {
         isSignedIn = value;
@@ -44,6 +77,7 @@ class _AidFirstAppState extends State<AidFirstApp> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
     return MaterialApp(
       theme: ThemeData(
         appBarTheme: const AppBarTheme(

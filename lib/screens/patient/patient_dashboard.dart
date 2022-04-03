@@ -1,4 +1,7 @@
 import 'package:aid_first/main.dart';
+import 'package:aid_first/models/appointment.dart' as appointment;
+import 'package:aid_first/screens/patient/appointment_history/appointment_history.dart';
+import 'package:aid_first/screens/patient/book_appointment/appointment.dart';
 import 'package:aid_first/services/auth/firebase_auth_service.dart';
 import 'package:aid_first/services/database/firebase_database_service.dart';
 import 'package:aid_first/services/preferences/shared_preferences_service.dart';
@@ -17,6 +20,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
   String? name;
   String? email;
   String? phoneNuber;
+  List<appointment.Appointment>? appointments;
 
   @override
   void initState() {
@@ -27,6 +31,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
             name = user.name;
             email = user.email;
             phoneNuber = user.phoneNumber;
+            appointments = user.appointments;
           });
         }
       });
@@ -223,7 +228,16 @@ class _PatientDashboardState extends State<PatientDashboard> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AppointmentHistory(
+                                appointments: appointments,
+                              ),
+                            ),
+                          );
+                        },
                         child: Container(
                           clipBehavior: Clip.hardEdge,
                           width: double.maxFinite,
@@ -242,7 +256,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                               Icon(Icons.history, color: Colors.blue[900]),
                               const SizedBox(width: 20),
                               Text(
-                                'Diagnose History',
+                                'Appointment History',
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.blue[900],
@@ -311,7 +325,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                           clipBehavior: Clip.hardEdge,
                           width: double.maxFinite,
                           height: 100,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.white,
@@ -319,14 +333,14 @@ class _PatientDashboardState extends State<PatientDashboard> {
                           child: Row(
                             children: [
                               const CircleAvatar(
-                                radius: 25,
+                                radius: 30,
                                 child: Icon(
                                   Icons.person_rounded,
-                                  size: 34,
+                                  size: 40,
                                 ),
                               ),
                               const SizedBox(
-                                width: 20,
+                                width: 15,
                               ),
                               SizedBox(
                                 child: Column(
@@ -459,7 +473,14 @@ class _PatientDashboardState extends State<PatientDashboard> {
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: GestureDetector(
-                                      onTap: () => {},
+                                      onTap: () => {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => const Appointment(),
+                                          ),
+                                        ),
+                                      },
                                       child: Container(
                                         height: 35,
                                         width: 220,
@@ -597,7 +618,16 @@ class _PatientDashboardState extends State<PatientDashboard> {
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: GestureDetector(
-                                      onTap: () => {},
+                                      onTap: () => {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => AppointmentHistory(
+                                              appointments: appointments,
+                                            ),
+                                          ),
+                                        )
+                                      },
                                       child: Container(
                                         height: 35,
                                         width: 220,
@@ -608,7 +638,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            'Medical History',
+                                            'Appointment History',
                                             style: GoogleFonts.inter(
                                               fontSize: 16,
                                               color: Colors.white,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aid_first/screens/patient/constants.dart';
 import 'package:aid_first/screens/patient/diagnose_yourself/diagnose_results.dart';
+import 'package:aid_first/services/preferences/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,7 +27,10 @@ class _DiagnoseYourselfState extends State<DiagnoseYourself> {
 
   Future<dynamic>? getSymptoms() async {
     try {
-      final res = await http.get(Uri.parse(AuthConstants.healthApiSymptoms));
+      final token =
+          await SharedPreferencesService.instance.getString('BEARER_TOKEN');
+      final res =
+          await http.get(Uri.parse(AuthConstants.healthApiSymptoms(token!)));
       final List<dynamic> response = json.decode(res.body);
       List<Map<String, dynamic>> formattedRes = [];
       for (int i = 0; i < response.length; i++) {

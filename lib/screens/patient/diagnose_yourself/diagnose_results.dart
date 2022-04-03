@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aid_first/screens/patient/constants.dart';
 import 'package:aid_first/screens/patient/diagnose_yourself/result_card.dart';
+import 'package:aid_first/services/preferences/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,8 +29,10 @@ Future<dynamic> getDiagnosisResults(
     final symptoms = json.encode(symptomIds);
     String urlComponent =
         '&symptoms=$symptoms&year_of_birth=$age&gender=$gender';
-    final res = await http
-        .get(Uri.parse(AuthConstants.healthApiDiagnosisUri + urlComponent));
+    final token =
+        await SharedPreferencesService.instance.getString('BEARER_TOKEN');
+    final res = await http.get(
+        Uri.parse(AuthConstants.healthApiDiagnosisUri(token!) + urlComponent));
     final dynamic response = json.decode(res.body);
     List<Map<String, dynamic>> formattedRes = [];
     for (int i = 0; i < response.length; i++) {

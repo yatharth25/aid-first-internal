@@ -27,7 +27,7 @@ class ResultCard extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        height: 100,
+        clipBehavior: Clip.hardEdge,
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -40,34 +40,40 @@ class ResultCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/doctor.png',
-              fit: BoxFit.contain,
+            SizedBox(
+              height: 76,
+              child: Image.asset(
+                'assets/doctor.png',
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      'Name: ',
-                      style: GoogleFonts.prociono(
-                        color: Colors.blue[800],
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 165,
+                  child: Wrap(
+                    children: [
+                      Text(
+                        'Name: ',
+                        style: GoogleFonts.prociono(
+                          color: Colors.blue[800],
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    Text(
-                      name,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.prociono(
-                        color: Colors.blue[800],
-                        fontSize: 20,
+                      Text(
+                        name,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.prociono(
+                          color: Colors.blue[800],
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
