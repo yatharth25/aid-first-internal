@@ -67,7 +67,7 @@ class _PatientOTPState extends State<PatientUsername> {
                 padding: const EdgeInsets.all(15),
                 child: Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.always,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       children: [
                         Text(

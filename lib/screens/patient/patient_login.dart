@@ -257,6 +257,7 @@ class _PatientLoginState extends State<PatientLogin> {
       setState(() {
         _verificationIdFinal = verificationId;
         if (_verificationIdFinal.isNotEmpty) {
+          Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(

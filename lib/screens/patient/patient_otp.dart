@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:aid_first/screens/patient/patient_login.dart';
 import 'package:aid_first/screens/patient/patient_username.dart';
 import 'package:aid_first/services/auth/firebase_auth_service.dart';
 import 'package:aid_first/services/database/firebase_database_service.dart';
@@ -20,17 +23,17 @@ class PatientOTP extends StatefulWidget {
 class _PatientOTPState extends State<PatientOTP> {
   late final TextEditingController? _pinPutController;
   late final FocusNode _pinPutFocusNode;
-  // late int _countdownSeconds;
-  // bool _isbuttonEnabled = false;
-  // Timer? _pinTimer;
+  late int _countdownSeconds;
+  bool _isbuttonEnabled = false;
+  Timer? _pinTimer;
   String? _code;
 
   @override
   void initState() {
     super.initState();
-    // if (mounted) {
-    //   startTimer();
-    // }
+    if (mounted) {
+      startTimer();
+    }
     _pinPutFocusNode = FocusNode();
     _pinPutController = TextEditingController();
   }
@@ -39,8 +42,31 @@ class _PatientOTPState extends State<PatientOTP> {
   void dispose() {
     _pinPutFocusNode.dispose();
     _pinPutController?.dispose();
-    // _pinTimer?.cancel();
+    _pinTimer?.cancel();
     super.dispose();
+  }
+
+  void startTimer() {
+    setState(() {
+      _countdownSeconds = 30;
+      _isbuttonEnabled = false;
+    });
+
+    _pinTimer?.cancel();
+    _pinTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_countdownSeconds <= 0) {
+        timer.cancel();
+        _pinTimer = null;
+
+        setState(() {
+          _isbuttonEnabled = true;
+        });
+      } else {
+        setState(() {
+          _countdownSeconds--;
+        });
+      }
+    });
   }
 
   @override
@@ -141,31 +167,58 @@ class _PatientOTPState extends State<PatientOTP> {
                     pinAnimationType: PinAnimationType.scale,
                   ),
                 ),
+                const SizedBox(height: 15),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    children: [
+                      const TextSpan(
+                        text: 'Resend',
+                      ),
+                      TextSpan(
+                        text: ' in 00:$_countdownSeconds',
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
-                  height: 100,
+                  height: 80,
                 ),
                 InkWell(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => Material(
-                                color: Colors.transparent,
-                                child: Center(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset('assets/syrup.png'),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      width: 300,
-                                      child: LinearProgressIndicator(
-                                        color: Colors.blue[800],
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                              ));
+                      _isbuttonEnabled
+                          ? Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const PatientLogin(),
+                              ),
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (BuildContext context) => Material(
+                                    color: Colors.transparent,
+                                    child: Center(
+                                        child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Image.asset('assets/syrup.png'),
+                                        const SizedBox(height: 10),
+                                        SizedBox(
+                                          width: 300,
+                                          child: LinearProgressIndicator(
+                                            color: Colors.blue[800],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                  ));
                       _verifyPin(_pinPutController!.text, context);
                     },
                     child: Container(
@@ -177,7 +230,7 @@ class _PatientOTPState extends State<PatientOTP> {
                       ),
                       child: Center(
                         child: Text(
-                          'Next',
+                          _isbuttonEnabled ? 'Resend' : 'Next',
                           style: GoogleFonts.poppins(
                               color: Colors.white, fontSize: 15),
                         ),

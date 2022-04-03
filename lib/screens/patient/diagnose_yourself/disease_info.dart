@@ -1,6 +1,11 @@
 import 'dart:convert';
 
+import 'package:aid_first/models/doctor.dart';
+import 'package:aid_first/screens/patient/book_appointment/doctors_list.dart';
 import 'package:aid_first/screens/patient/constants.dart';
+import 'package:aid_first/screens/patient/patient_dashboard.dart';
+import 'package:aid_first/services/appointment_service/firebase_appointment_service.dart';
+import 'package:aid_first/services/preferences/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -31,15 +36,18 @@ class _DiseaseInfoState extends State<DiseaseInfo> {
 
   @override
   void initState() {
-    var url = AuthConstants.healthApiDiseaseInfo(widget.issueId);
-    getDiseaseInfo(url).then((value) => {
-          if (mounted)
-            {
-              setState(() {
-                diseaseInfo = value;
-              })
-            }
-        });
+    SharedPreferencesService.instance.getString('BEARER_TOKEN').then((token) {
+      var url = AuthConstants.healthApiDiseaseInfo(widget.issueId, token!);
+      getDiseaseInfo(url).then((value) => {
+            if (mounted)
+              {
+                setState(() {
+                  diseaseInfo = value;
+                })
+              }
+          });
+    });
+
     super.initState();
   }
 
@@ -218,6 +226,93 @@ class _DiseaseInfoState extends State<DiseaseInfo> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () async {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Material(
+                            color: Colors.transparent,
+                            child: Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/syrup.png'),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: 300,
+                                  child: LinearProgressIndicator(
+                                    color: Colors.blue[800],
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ),
+                        );
+                        await FirebaseAppointmentService.instance
+                            .getDoctorDetails()
+                            .then(
+                              (List<Doctor>? doctors) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => DoctorsList(
+                                    docList: doctors,
+                                  ),
+                                ),
+                              ),
+                            );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          border: Border.all(
+                            color: Colors.blue,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          'Book Appointment',
+                          style: GoogleFonts.prociono(
+                            fontSize: 18,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const PatientDashboard()),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'Go to Home',
+                          style: GoogleFonts.prociono(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 100),

@@ -1,3 +1,4 @@
+import 'package:aid_first/models/appointment.dart';
 import 'package:aid_first/models/user.dart';
 import 'package:aid_first/services/database/firebase_database_base.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -19,11 +20,27 @@ class FirebaseDatabaseService implements FirebaseDatabaseServiceBase {
 
     if (res.snapshot.exists) {
       final Map result = res.snapshot.value as Map;
+
+      List<Appointment> appointments = [];
+      if (result['appointments'] != null) {
+        for (int i = 0; i < (result['appointments'] as List).length; i++) {
+          appointments.add(
+            Appointment(
+              id: result['appointments'][i]['doctorId'],
+              name: result['appointments'][i]['name'],
+              slot: result['appointments'][i]['slot'],
+              date: DateTime.parse(result['appointments'][i]['date']),
+            ),
+          );
+        }
+      }
+
       return User(
         userId: id,
         name: result['name'],
         email: result['email'],
         phoneNumber: result['phoneNumber'],
+        appointments: appointments,
       );
     } else {
       return null;
