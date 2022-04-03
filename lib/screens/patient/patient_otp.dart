@@ -78,7 +78,7 @@ class _PatientOTPState extends State<PatientOTP> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 250),
+          padding: const EdgeInsets.symmetric(vertical: 200),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -310,17 +310,6 @@ class _PatientOTPState extends State<PatientOTP> {
       } else if (isSignedIn == false) {
         if (!mounted) return;
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Wrong Pin!'),
-          behavior: SnackBarBehavior.fixed,
-          duration: Duration(seconds: 2),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          )),
-          backgroundColor: Colors.red,
-        ));
       }
     });
   }

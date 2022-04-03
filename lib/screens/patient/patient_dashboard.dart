@@ -318,7 +318,7 @@ class _PatientDashboardState extends State<PatientDashboard> {
                     Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
                       child: Material(
-                        elevation: 4,
+                        elevation: 2,
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
@@ -328,6 +328,8 @@ class _PatientDashboardState extends State<PatientDashboard> {
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                width: 2, color: Colors.blue.shade200),
                             color: Colors.white,
                           ),
                           child: Row(
