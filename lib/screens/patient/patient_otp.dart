@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:aid_first/app_routes.dart';
 import 'package:aid_first/screens/patient/patient_login.dart';
 import 'package:aid_first/screens/patient/patient_username.dart';
 import 'package:aid_first/services/auth/firebase_auth_service.dart';
 import 'package:aid_first/services/database/firebase_database_service.dart';
+import 'package:aid_first/store/user_store.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pin_put/pin_put.dart';
@@ -269,17 +271,21 @@ class _PatientOTPState extends State<PatientOTP> {
           backgroundColor: Colors.blue,
         ));
         FirebaseAuthService.instance.getAuthId().then((id) {
-          FirebaseDatabaseService.instance.getUserDetails(id!).then((response) {
-            response != null
-                ? Navigator.pushNamedAndRemoveUntil(context,
-                    '/PatientDashboard', (Route<dynamic> route) => false)
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          PatientUsername(phoneNumber: widget.phoneNumber!),
-                    ),
-                  );
+          userStore.setUserId(id!);
+          FirebaseDatabaseService.instance.getUserDetails(id).then((response) {
+            if (response != null) {
+              userStore.setUser(response);
+              Navigator.pushNamedAndRemoveUntil(context,
+                  Routes.PATIENT_DASHBOARD, (Route<dynamic> route) => false);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      PatientUsername(phoneNumber: widget.phoneNumber!),
+                ),
+              );
+            }
           });
         });
 

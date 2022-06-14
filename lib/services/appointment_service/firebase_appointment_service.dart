@@ -3,6 +3,7 @@ import 'package:aid_first/services/appointment_service/firebase_apointment_base.
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseAppointmentService implements FirebaseAppointmentServiceBase {
+  // ignore: unused_field
   late final DatabaseReference _ref;
 
   FirebaseAppointmentService._privateConstructor() {

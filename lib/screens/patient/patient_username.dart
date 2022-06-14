@@ -1,3 +1,4 @@
+import 'package:aid_first/app_routes.dart';
 import 'package:aid_first/services/auth/firebase_auth_service.dart';
 import 'package:aid_first/services/database/firebase_database_service.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +140,10 @@ class _PatientOTPState extends State<PatientUsername> {
                               controller: _userEmailController,
                               focusNode: _userEmailFocusNode,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    !value.contains(RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))) {
                                   return 'Please enter valid email';
                                 }
                                 return null;
@@ -191,7 +195,7 @@ class _PatientOTPState extends State<PatientUsername> {
                                       .then((value) =>
                                           Navigator.pushNamedAndRemoveUntil(
                                               context,
-                                              '/PatientDashboard',
+                                              Routes.PATIENT_DASHBOARD,
                                               (Route<dynamic> route) => false));
                                 }
                               },

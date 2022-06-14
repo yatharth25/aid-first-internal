@@ -4,6 +4,7 @@ import 'package:aid_first/services/database/firebase_database_base.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseDatabaseService implements FirebaseDatabaseServiceBase {
+  // ignore: unused_field
   late final DatabaseReference _ref;
 
   FirebaseDatabaseService._privateConstructor() {

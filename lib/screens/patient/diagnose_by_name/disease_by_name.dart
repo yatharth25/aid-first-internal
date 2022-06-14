@@ -56,11 +56,17 @@ class _DiseaseByNameState extends State<DiseaseByName> {
       String text = textEditingController.text;
       setState(() {
         for (int i = 0; i < sortedDisList.length; i++) {
-          if (sortedDisList[i]['name'].contains(text)) {
-            searchList.add(sortedDisList[i]);
+          if (sortedDisList[i]['name']
+              .toString()
+              .toLowerCase()
+              .contains(text)) {
+            if (!searchList.contains(sortedDisList[i])) {
+              searchList.add(sortedDisList[i]);
+            }
           }
         }
       });
+      print(searchList);
     }
 
     return Scaffold(
@@ -84,6 +90,7 @@ class _DiseaseByNameState extends State<DiseaseByName> {
         ),
         autoFocus: true,
         rtl: true,
+        animationDurationInMilli: 250,
         textController: textEditingController,
         closeSearchOnSuffixTap: true,
         onSuffixTap: () {
@@ -158,7 +165,10 @@ class _DiseaseByNameState extends State<DiseaseByName> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.57,
                                   child: Text(
-                                    diseaseNames[i],
+                                    textEditingController.text.isEmpty ||
+                                            searchList.isEmpty
+                                        ? diseaseNames[i]
+                                        : searchList[i]['name'],
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
                                     style: GoogleFonts.poppins(fontSize: 25),

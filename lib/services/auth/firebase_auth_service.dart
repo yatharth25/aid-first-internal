@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:aid_first/services/auth/auth_service_base.dart';
 import 'package:aid_first/services/preferences/shared_preferences_service.dart';
+import 'package:aid_first/store/user_store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService implements AuthServiceBase {
@@ -112,6 +113,7 @@ class FirebaseAuthService implements AuthServiceBase {
     try {
       final String authToken = await userCredential.user!.getIdToken(true);
       final String userId = userCredential.user!.uid;
+      userStore.setUserId(userId);
       SharedPreferencesService.instance.setString("AUTH_TOKEN", authToken);
       SharedPreferencesService.instance.setString("FIREBASE_ID", userId);
     } catch (e) {

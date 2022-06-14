@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
+import 'package:aid_first/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:aid_first/animations/fade_animation.dart';
 import 'package:aid_first/animations/bottom_animation.dart';
@@ -79,7 +80,7 @@ class Category extends StatelessWidget {
                       FlatButton(
                         shape: const CircleBorder(),
                         onPressed: () =>
-                            Navigator.pushNamed(context, '/AboutUs'),
+                            Navigator.pushNamed(context, Routes.ABOUT_US),
                         child: Icon(
                           Icons.info,
                           size: height * 0.04,
@@ -149,7 +150,7 @@ class Category extends StatelessWidget {
           if (categoryText == 'Doctor') {
             Navigator.pushNamed(context, '/DoctorLogin');
           } else {
-            Navigator.pushNamed(context, '/PatientLogin');
+            Navigator.pushNamed(context, Routes.PATIENT_LOGIN);
           }
         },
         color: Colors.white,
