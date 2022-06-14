@@ -42,7 +42,7 @@ Future<dynamic> getDiagnosisResults(
         'accuracy': response[i]['Issue']['Accuracy'],
       });
     }
-    print(formattedRes);
+
     return formattedRes;
   } catch (e) {
     print('Error aayi hai');

@@ -1,8 +1,7 @@
-import 'package:aid_first/models/appointment.dart';
 import 'package:aid_first/models/doctor.dart';
 import 'package:aid_first/screens/patient/book_appointment/appointment_booked.dart';
-import 'package:aid_first/services/auth/firebase_auth_service.dart';
 import 'package:aid_first/services/database/firebase_database_service.dart';
+import 'package:aid_first/store/user_store.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,26 +19,6 @@ class DoctorDetails extends StatefulWidget {
 class _DoctorDetailsState extends State<DoctorDetails> {
   String selectedSlot = '10AM-10:30AM';
   DateTime selectedDate = DateTime.now();
-  String? userId;
-  List<Appointment> appointments = [];
-
-  @override
-  void initState() {
-    FirebaseAuthService.instance.getAuthId().then((id) {
-      if (id == null) return;
-      setState(() {
-        userId = id;
-      });
-      FirebaseDatabaseService.instance.getUserDetails(id).then((res) {
-        if (res?.appointments == null) return;
-        setState(() {
-          appointments = res?.appointments ?? [];
-        });
-      });
-    });
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -321,12 +300,15 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                           )),
                         ),
                       );
-                      for (int i = 0; i < appointments.length; i++) {
+                      for (int i = 0;
+                          i < userStore.user!.appointments!.length;
+                          i++) {
                         app.add({
-                          'doctorId': appointments[i].id,
-                          'name': appointments[i].name,
-                          'slot': appointments[i].slot,
-                          'date': appointments[i].date.toIso8601String(),
+                          'doctorId': userStore.user!.appointments![i].id,
+                          'name': userStore.user!.appointments![i].name,
+                          'slot': userStore.user!.appointments![i].slot,
+                          'date': userStore.user!.appointments![i].date
+                              .toIso8601String(),
                         });
                       }
                       app.add({
@@ -336,7 +318,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                         'date': selectedDate.toIso8601String(),
                       });
                       await FirebaseDatabaseService.instance.updateUserDetails(
-                        userId: userId!,
+                        userId: userStore.user!.userId,
                         updateDetails: {'appointments': app},
                       );
                       Navigator.push(
